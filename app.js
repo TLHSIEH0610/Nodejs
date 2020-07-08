@@ -13,18 +13,13 @@ app.set('view engine','ejs');
 //增加靜態檔案的路徑
 app.use(express.static('public'))
 
-//路由
-app.get('/',function(req,res){
-   res.render('index');
-})
-
 // 監聽 port
 var port = process.env.PORT || 3000;
 app.listen(port);
 
 // 增加 body 解析
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({extended:true}))
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -32,52 +27,43 @@ admin.initializeApp({
 });
 
 let fireData = admin.database();
-// fireData.ref('todos').once('value',function(snapshot){
-//    console.log(snapshot.val());
-// })
 
-// fireData.ref('todos').set({'say':'hellow'}).then(fireData.ref('todos').once('value',function(snapshot){
-//    console.log(snapshot.val());
-// }))
-
+//路由
 app.get('/',function(req,res){
    fireData.ref('todos').once('value',function(snapshot){
-      let todos = snapshot.val();
-      let how = todos.say;
-      res.render('index',{how});
+       var data = snapshot.val();
+       res.render('index',{"todolist":data})
    })
 })
 
-app.post('/addtodo',function(req,res){
-   let cont = req.body;
-   console.log(cont);
-   fireData.ref('todos').push({"content": cont}).then(
-      function(){
-         fireData.ref('todos').once('value',function(snapshot){
-            console.log(snapshot.val())
-            res.send({
-               'success':'true',
-               'data': snapshot.val(),
-               'result': 'readable'
-            });
-         })
-      })
+
+app.post('/addTodo',function(req,res){
+   var content = req.body.content;
+   var contentRef = fireData.ref('todos').push();
+   contentRef.set({"content":content})
+   .then(function(){
+       fireData.ref('todos').once('value',function(snapshot){
+           res.send(
+               {
+                   "success": true,
+                   "result": snapshot.val(),
+                   "message": "資料讀取成功"
+               }
+           );
+       })
+   })
 })
 
-// app.post('/addtodo',function(req,res){
-//    let content = res.body.content;
-//    let contentRef = fireData.ref('todos').push();
-//    contentRef.set({"content": content}).then(
-//       function(){
-//          fireData.ref('todos').once('value',function(snapshot){
-//             console.log(snapshot.val())
-//             res.send({
-//                'success':true,
-//                'data': snapshot.val(),
-//                'result': 'readable'
-//             })
-//          })
-//       }
-//    )
-// })
-
+app.post('/removeTodo',function(req,res){
+    let id = req.body.id;
+    fireData.ref('todos').child(id).remove()
+    .then(function(){
+        fireData.ref('todos').once('value',function(snapshot){
+            res.send({
+                "success": true,
+                "result": snapshot.val(),
+                "message": "資料刪除成功"
+            })
+        })
+    })
+})
