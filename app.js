@@ -29,6 +29,11 @@ admin.initializeApp({
 let fireData = admin.database();
 
 //路由
+// routes
+var contact = require('./routers/contact');
+app.use('/contact', contact);
+
+
 app.get('/',function(req,res){
    fireData.ref('todos').once('value',function(snapshot){
        var data = snapshot.val();
