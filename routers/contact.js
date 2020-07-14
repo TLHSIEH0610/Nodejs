@@ -12,7 +12,7 @@ router.get('/review', function(req, res) {
 });
 
 router.post('/post', function(req, res) {
-    res.header("Access-Control-Allow-Origin","*")
+    res.header("Access-Control-Allow-Origin","*");
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         secure: true,
@@ -36,6 +36,7 @@ router.post('/post', function(req, res) {
         if(error){
             return console.log(error);
         }
+        
         res.redirect('review');
     })
  
