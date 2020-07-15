@@ -1,8 +1,23 @@
 var express = require('express');
+var app = express();
 var nodemailer = require('nodemailer');
 var router = express.Router();
 
 require('dotenv').config();
+
+// var airRouter = require('./air');
+// app.use('/air', airRouter);
+
+
+// let allowCrossDomain = function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     next();
+//   }
+//   app.use(allowCrossDomain);
+
+
+
 
 router.get('/', function(req, res) {
     res.render('contact');
@@ -11,8 +26,8 @@ router.get('/review', function(req, res) {
     res.render('contactReview');
 });
 
-router.post('/post', function(req, res) {
-    res.header("Access-Control-Allow-Origin","*");
+router.post('/post' ,function(req, res) {
+    res.header("Access-Control-Allow-Origin","https://tlhsieh0610.github.io/Vue-Practice/");
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         secure: true,
@@ -24,7 +39,7 @@ router.post('/post', function(req, res) {
           refreshToken: process.env.REFRESHTOKEN,
         }
       });
-
+    console.log(req.body);
     let mailOption = {
         from: `"使用者留言"<${req.body.email}>`,  
         to : 'tlhsieh0610@gmail.com',

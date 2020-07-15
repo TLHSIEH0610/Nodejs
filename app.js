@@ -7,6 +7,7 @@ var admin = require("firebase-admin");
 
 var serviceAccount = require("./project-36a6a-firebase-adminsdk-8zbmw-bb68209969.json");
 
+
 app.engine('ejs',engine);
 app.set('views','./views');
 app.set('view engine','ejs');
@@ -28,10 +29,24 @@ admin.initializeApp({
 
 let fireData = admin.database();
 
-//路由
-// routes
+//路由 routes
+var airRouter = require('./routers/air');
+app.use('/air', airRouter);
+
+let allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'https://tlhsieh0610.github.io');
+    // res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    next();
+  }
+  app.use(allowCrossDomain)
+
+
+
 var contact = require('./routers/contact');
 app.use('/contact', contact);
+
+
 
 
 app.get('/',function(req,res){
