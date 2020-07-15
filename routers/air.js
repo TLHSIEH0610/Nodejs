@@ -6,7 +6,7 @@ var client = new Client();
 router.get('/', function(req, res, next) {
     let queries=req.query
     console.log('query: ', queries);
-    let url='https://tlhsieh0610.github.io'
+    let url='https://tlhsieh0610.github.io/Vue-Practice/'
     var options = {
         host: url,
         method: 'GET'

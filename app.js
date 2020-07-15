@@ -30,16 +30,15 @@ admin.initializeApp({
 let fireData = admin.database();
 
 //路由 routes
-var airRouter = require('./routers/air');
-app.use('/air', airRouter);
+// var airRouter = require('./routers/air');
+// app.use('/air', airRouter);
 
-let allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://tlhsieh0610.github.io');
-    // res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    next();
-  }
-  app.use(allowCrossDomain)
+// let allowCrossDomain = function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', 'https://tlhsieh0610.github.io');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     next();
+//   }
+//   app.use(allowCrossDomain)
 
 
 
