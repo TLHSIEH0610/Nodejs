@@ -25,7 +25,7 @@ router.get('/review', function(req, res) {
 
 // https://tlhsieh0610.github.io/Vue-Practice/
 let allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.header('Access-Control-Allow-Origin', 'https://tlhsieh0610.github.io/Vue-Practice/');
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');  
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Auth-Token');
