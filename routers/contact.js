@@ -29,14 +29,14 @@ let allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');  
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Auth-Token');
-    // res.header('Access-Control-Expose-Headers', 'Content-Length, X-JSON');
+    res.header('Access-Control-Expose-Headers', 'Content-Length, X-JSON');
     next();
   }
   app.use(allowCrossDomain)
 
 
 router.post('/post' ,allowCrossDomain ,function(req, res) {
-    // res.header("Access-Control-Allow-Origin","http://localhost:8080");
+    res.header("Access-Control-Allow-Origin","http://localhost:8080");
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         secure: true,
@@ -48,7 +48,8 @@ router.post('/post' ,allowCrossDomain ,function(req, res) {
           refreshToken: process.env.REFRESHTOKEN,
         }
       });
-    console.log(req.body);
+
+    console.log( req.body);
     let mailOption = {
         from: `"使用者留言"<${req.body.email}>`,  
         to : 'tlhsieh0610@gmail.com',
@@ -56,13 +57,13 @@ router.post('/post' ,allowCrossDomain ,function(req, res) {
         text: req.body.description
     }
     transporter.sendMail(mailOption,function(error,info){
-        console.log(req.body.email);
+        console.log(req);
         if(error){
             return console.log(error);
         }
         res.send('恭喜發財');
         // res.redirect('review');
-        console.log(req.body);
+        console.log( req.body);
     })
  
 });
