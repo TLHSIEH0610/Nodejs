@@ -8,8 +8,7 @@ var router = express.Router();
 var Client = require('node-rest-client').Client;
 var client = new Client();
 
-let cors = require('cors');
-app.use(cors());
+
 
 require('dotenv').config();
 
@@ -19,24 +18,10 @@ require('dotenv').config();
 router.get('/', function(req, res) {
     res.render('contact');
 });
-router.get('/review', function(req, res) {
-    res.render('contactReview');
-});
-
-// https://tlhsieh0610.github.io/Vue-Practice/
-let allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://tlhsieh0610.github.io/Vue-Practice/');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');  
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Auth-Token');
-    res.header('Access-Control-Expose-Headers', 'Content-Length, X-JSON');
-    next();
-  }
-  app.use(allowCrossDomain)
 
 
-router.post('/post' ,allowCrossDomain ,function(req, res) {
-    res.header("Access-Control-Allow-Origin","http://localhost:8080");
+router.post('/post', function(req, res) {
+    // res.header("Access-Control-Allow-Origin","http://localhost:8080");
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         secure: true,
@@ -61,9 +46,7 @@ router.post('/post' ,allowCrossDomain ,function(req, res) {
         if(error){
             return console.log(error);
         }
-        res.send('恭喜發財');
-        // res.redirect('review');
-        console.log( req.body);
+        res.send('送出成功');
     })
  
 });
