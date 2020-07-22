@@ -2,12 +2,14 @@ var express = require('express');
 var app = express();
 var engine = require('ejs-locals');
 var bodyParser = require('body-parser');
-
+require('dotenv').config();
 var admin = require("firebase-admin");
+var nodemailer = require('nodemailer');
 
-var serviceAccount = require("./project-36a6a-firebase-adminsdk-8zbmw-bb68209969.json");
+
 var cors = require('cors');
 const corsOptions = {
+    //http://localhost:8081/ https://tlhsieh0610.github.io
     origin: 'https://tlhsieh0610.github.io',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
@@ -15,9 +17,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.engine('ejs',engine);
-app.set('views','./views');
-app.set('view engine','ejs');
 //增加靜態檔案的路徑
 app.use(express.static('public'))
 
@@ -29,67 +28,33 @@ app.listen(port);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://project-36a6a.firebaseio.com"
-});
-
-let fireData = admin.database();
-
 //路由 routes
-// var airRouter = require('./routers/air');
-// app.use('/air', airRouter);
+app.post('/post', function(req, res) {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        secure: true,
+        auth: {
+          type: "OAuth2",
+          user: process.env.ACCOUNT,
+          clientId: process.env.CLINENTID,
+          clientSecret: process.env.CLINENTSECRET,
+          refreshToken: process.env.REFRESHTOKEN,
+        }
+      });
 
-// let allowCrossDomain = function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:8080/');
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//     next();
-//   }
-//   app.use(allowCrossDomain)
-
-
-
-var contact = require('./routers/contact');
-app.use('/contact', contact);
-
-
-
-
-app.get('/',function(req,res){
-   fireData.ref('todos').once('value',function(snapshot){
-       var data = snapshot.val();
-       res.render('index',{"todolist":data})
-   })
-})
-
-
-app.post('/addTodo',function(req,res){
-   var content = req.body.content;
-   var contentRef = fireData.ref('todos').push();
-   contentRef.set({"content":content})
-   .then(function(){
-       fireData.ref('todos').once('value',function(snapshot){
-           res.send(
-               {
-                   "success": true,
-                   "result": snapshot.val(),
-                   "message": "資料讀取成功"
-               }
-           );
-       })
-   })
-})
-
-app.post('/removeTodo',function(req,res){
-    let id = req.body.id;
-    fireData.ref('todos').child(id).remove()
-    .then(function(){
-        fireData.ref('todos').once('value',function(snapshot){
-            res.send({
-                "success": true,
-                "result": snapshot.val(),
-                "message": "資料刪除成功"
-            })
-        })
+    console.log( req.body);
+    let mailOption = {
+        from: `"使用者留言"<${req.body.email}>`,  
+        to : 'tlhsieh0610@gmail.com',
+        subject:req.body.username +'寄了一封信',
+        text: req.body.description
+    }
+    transporter.sendMail(mailOption,function(error,info){
+        console.log(req);
+        if(error){
+            return console.log(error);
+        }
+        res.send('送出成功');
     })
-})
+ 
+});
