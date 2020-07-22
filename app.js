@@ -8,7 +8,7 @@ var admin = require("firebase-admin");
 var serviceAccount = require("./project-36a6a-firebase-adminsdk-8zbmw-bb68209969.json");
 var cors = require('cors');
 const corsOptions = {
-    origin: 'https://tlhsieh0610.github.io/',
+    origin: 'https://tlhsieh0610.github.io',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     optionsSuccessStatus: 200,
